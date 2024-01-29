@@ -1,6 +1,4 @@
 pandas
 streamlit
-ast
 numpy
-unicodedata
 openpyxl
