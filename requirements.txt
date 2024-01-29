@@ -1,0 +1,7 @@
+pandas
+streamlit
+json
+ast
+numpy
+unicodedata
+openpyxl
