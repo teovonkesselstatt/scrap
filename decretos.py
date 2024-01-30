@@ -9,7 +9,7 @@ import openpyxl
 # Function to load the DataFrame
 @st.cache_data
 def load_data():
-    df = pd.read_excel('decretos_y_leyes_temas_filtered.xlsx')
+    df = pd.read_csv('decretos_y_leyes_temas_filtered.csv')
     cols = df.select_dtypes(include=[object]).columns
     df[cols] = df[cols].apply(lambda x: x.str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8'))
     df['Temas'] = df['Temas'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
