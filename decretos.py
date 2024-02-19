@@ -7,7 +7,6 @@ import unicodedata
 import openpyxl
 
 # Function to load the DataFrame
-@st.cache_data
 def load_data():
     df = pd.read_csv('decretos_y_leyes_temas_filtered.csv')
     cols = df.select_dtypes(include=[object]).columns
@@ -71,6 +70,16 @@ def filter_df(df, choice):
         return df[df['Temas'].apply(lambda x: choice in [j.lower() for j in x])]
 
 filtered_df = filter_df(df, choice)
+
+# Tema is a list. Get value counts of each element in the list
+count_temas = filtered_df.explode('Temas')
+index_temas = count_temas['Temas'].value_counts().reset_index()
+st.sidebar.write('Temas más comunes:')
+# Print each tema and its count
+for i in range(20):
+    st.sidebar.write(index_temas['index'][i], ': ', index_temas['Temas'][i])
+
+
 
 filtered_df = filtered_df.sort_values(by='Date', ascending=False)
 
