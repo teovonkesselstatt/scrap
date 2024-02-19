@@ -69,18 +69,8 @@ def filter_df(df, choice):
         choice = choice.lower()
         return df[df['Temas'].apply(lambda x: choice in [j.lower() for j in x])]
 
+# Filter the DataFrame based on the selected tema
 filtered_df = filter_df(df, choice)
-
-# Tema is a list. Get value counts of each element in the list
-count_temas = filtered_df.explode('Temas')
-index_temas = count_temas['Temas'].value_counts().reset_index()
-st.sidebar.write('Temas más comunes:')
-# Print each tema and its count
-for i in range(20):
-    st.sidebar.write(index_temas['index'][i], ': ', index_temas['Temas'][i])
-
-
-
 filtered_df = filtered_df.sort_values(by='Date', ascending=False)
 
 # Add a checkbox to filter only rows that have 'Decreto Reglamentario' in the Temas column
