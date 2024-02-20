@@ -74,7 +74,7 @@ def filter_df(df, choice):
 filtered_df = filter_df(df, choice)
 filtered_df = filtered_df.sort_values(by='Date', ascending=False)
 
-col1, col2, col3 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 with col1:
     # Add a checkbox to filter only rows that have 'Decreto Reglamentario' in the Temas column
     if st.checkbox('Mostrar solo Decretos Reglamentarios'):
@@ -91,7 +91,7 @@ with col2:
 
 with col3:
     if st.checkbox('Mostrar Version Limpia'):
-        filtered_df = filtered_df[(filtered_df['Eliminado'] == 0)]
+        filtered_df = filtered_df[(filtered_df['Eliminado'] != 1)]
     
 filtered_df = filtered_df[['Name', 'Date', 'Tipo', 'Numero', 'URL']]
 
