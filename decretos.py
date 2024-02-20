@@ -5,6 +5,7 @@ import ast
 import numpy as np
 import unicodedata
 import openpyxl
+import datetime
 
 # Function to load the DataFrame
 def load_data():
@@ -41,17 +42,17 @@ def search_categories(data, search_term):
                     return found_path
         return None
 
-    if search_term.lower() == 'all':
-        return 'All'
+    if search_term.lower() == 'todos':
+        return 'Todos'
 
     return recurse(data)
 
 
 # Streamlit UI for search bar and displaying possible matches
-choice = st.sidebar.selectbox('Search Category/Subcategory', ['All'] + df['Temas'].explode().value_counts().index.to_list())
+choice = st.sidebar.selectbox('Seleccionar Tema', ['Todos'] + df['Temas'].explode().value_counts().index.to_list())
 
 
-if choice and choice != 'All':
+if choice and choice != 'Todos':
     path = search_categories(data, choice)
     if path:
         st.sidebar.write("Categoría Seleccionada: " + path)
@@ -61,7 +62,7 @@ if choice and choice != 'All':
 def filter_df(df, choice):
 
     # Check if selected_themes is empty, return original df if it is
-    if choice == 'All':
+    if choice == 'Todos':
         return df
 
     # Filter the DataFrame to include rows where the 'Temas' list intersects with selected_themes
@@ -73,10 +74,25 @@ def filter_df(df, choice):
 filtered_df = filter_df(df, choice)
 filtered_df = filtered_df.sort_values(by='Date', ascending=False)
 
-# Add a checkbox to filter only rows that have 'Decreto Reglamentario' in the Temas column
-if st.checkbox('Mostrar solo Decretos Reglamentarios'):
-    filtered_df = filtered_df[filtered_df['Temas'].apply(lambda x: 'decreto reglamentario' in [j.lower() for j in x])]
+col1, col2, col3 = st.columns(2)
+with col1:
+    # Add a checkbox to filter only rows that have 'Decreto Reglamentario' in the Temas column
+    if st.checkbox('Mostrar solo Decretos Reglamentarios'):
+        filtered_df = filtered_df[filtered_df['Temas'].apply(lambda x: 'decreto reglamentario' in [j.lower() for j in x])]
 
+with col2:
+    # Add a checkbox to filter only rows that were passed during kirchnerismo, beside the other selectbox
+    if st.checkbox('Mostrar solo Decretos Kirchneristas'):
+        begin1 = datetime.date(2001, 1, 1)
+        end1 = datetime.date(2015, 12, 11)
+        begin2 = datetime.date(2019, 12, 10)
+        end2 = datetime.date(2023, 12, 11)
+        filtered_df = filtered_df[((filtered_df['Date'] >= begin1) & (filtered_df['Date'] <= end1)) | ((filtered_df['Date'] >= begin2) & (filtered_df['Date'] <= end2))]
+
+with col3:
+    if st.checkbox('Mostrar Version Limpia'):
+        filtered_df = filtered_df[(filtered_df['Eliminado'] == 0)]
+    
 filtered_df = filtered_df[['Name', 'Date', 'Tipo', 'Numero', 'URL']]
 
 # Display the DataFrame as wide as possible
