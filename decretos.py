@@ -83,11 +83,7 @@ with col1:
 with col2:
     # Add a checkbox to filter only rows that were passed during kirchnerismo, beside the other selectbox
     if st.checkbox('Mostrar solo Decretos Kirchneristas'):
-        begin1 = datetime.date(2001, 1, 1)
-        end1 = datetime.date(2015, 12, 11)
-        begin2 = datetime.date(2019, 12, 10)
-        end2 = datetime.date(2023, 12, 11)
-        filtered_df = filtered_df[((filtered_df['Date'] >= begin1) & (filtered_df['Date'] <= end1)) | ((filtered_df['Date'] >= begin2) & (filtered_df['Date'] <= end2))]
+        filtered_df = filtered_df[filtered_df['K'] == 1]
 
 with col3:
     if st.checkbox('Mostrar Version Limpia'):
