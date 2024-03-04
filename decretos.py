@@ -75,19 +75,20 @@ filtered_df = filter_df(df, choice)
 filtered_df = filtered_df.sort_values(by='Date', ascending=False)
 
 col1, col2, col3 = st.columns(3)
+
 with col1:
-    # Add a checkbox to filter only rows that have 'Decreto Reglamentario' in the Temas column
-    if st.checkbox('Mostrar solo Decretos Reglamentarios'):
-        filtered_df = filtered_df[filtered_df['Temas'].apply(lambda x: 'decreto reglamentario' in [j.lower() for j in x])]
+    # Set a checkbox that is checked by default       
+    if st.checkbox('Mostrar Version Limpia'):
+        filtered_df = filtered_df[(filtered_df['Eliminado'] != 1)]
 
 with col2:
-    # Add a checkbox to filter only rows that were passed during kirchnerismo, beside the other selectbox
     if st.checkbox('Mostrar solo Decretos Kirchneristas'):
         filtered_df = filtered_df[filtered_df['K'] == 1]
 
 with col3:
-    if st.checkbox('Mostrar Version Limpia'):
-        filtered_df = filtered_df[(filtered_df['Eliminado'] != 1)]
+    if st.checkbox('Mostrar solo Decretos Reglamentarios'):
+        filtered_df = filtered_df[filtered_df['Temas'].apply(lambda x: 'decreto reglamentario' in [j.lower() for j in x])]
+
     
 filtered_df = filtered_df[['Name', 'Date', 'Tipo', 'Numero', 'URL']]
 
